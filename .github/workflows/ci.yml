@@ -15,18 +15,22 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      image: postgres:13
-      env:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: hayatdb12
-        POSTGRES_DB: simple_bank
-      options: >-
-        --health--cmd pg_isready
-        --health-interval 10s
-        --health-timeout 5s
-        --health-retries 5
-        
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres:13
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: hayatdb12
+          POSTGRES_USER: postgres
+          POSTGRES_DB: simple_bank
 
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v3
