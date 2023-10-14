@@ -50,6 +50,8 @@ jobs:
         
       - name: Run migrations
         run: make migrateup
+        env:
+          DATABASE_URL: "postgres://postgres:hayatdb12@localhost:5432/simple_bank?sslmode=disable"
 
 
       - name: Test
