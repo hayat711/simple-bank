@@ -1,6 +1,7 @@
 package db
 
 import (
+	"bank/util"
 	"database/sql"
 	_ "github.com/lib/pq"
 	"log"
@@ -8,17 +9,16 @@ import (
 	"testing"
 )
 
-const (
-	dbDriver = "postgres"
-	dbSource = "postgresql://postgres:hayatdb12@localhost:5432/simple_bank"
-)
-
 var testQueries *Queries
 var testDB *sql.DB
 
 func TestMain(m *testing.M) {
-	var err error
-	testDB, err = sql.Open(dbDriver, dbSource)
+	config, err := util.LoadConfig("../..")
+	if err != nil {
+		log.Fatal("cannot load env")
+	}
+
+	testDB, err = sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatalln("cannot connect to db!")
 	}
