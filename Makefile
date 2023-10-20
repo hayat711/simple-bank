@@ -2,7 +2,6 @@ migrateup:
 	 migrate -path db/migration -database "postgresql://root:hayatdb12@postgres:5432/simple_bank" -verbose up
 migratedown:
 	 migrate -path db/migration -database "postgresql://root:hayatdb12@postgres:5432/simple_bank" -verbose down
-
 migratedown1:
 	 migrate -path db/migration -database "postgresql://root:hayatdb12@postgres:5432/simple_bank" -verbose down 1
 
