@@ -3,6 +3,7 @@ package db
 import (
 	"bank/util"
 	"context"
+	"database/sql"
 	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
@@ -11,7 +12,7 @@ import (
 func createRandomUser(t *testing.T) User {
 	hashedPassword, err := util.HashPassword(util.RandomString(6))
 	require.NoError(t, err)
-	
+
 	arg := CreateUserParams{
 		Username:       util.RundomOwner(),
 		HashedPassword: hashedPassword,
@@ -52,5 +53,24 @@ func TestGetUser(t *testing.T) {
 
 	require.WithinDuration(t, user1.PasswordChangedAt, user2.PasswordChangedAt, time.Second)
 	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
+
+}
+
+func TestUpdateUserOnlyFullName(t *testing.T) {
+	oldUser := createRandomUser(t)
+
+	newFullName := util.RundomOwner()
+	updatedUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
+		Username: oldUser.Username,
+		FullName: sql.NullString{
+			String: newFullName,
+			Valid:  true,
+		},
+	})
+	require.NoError(t, err)
+	require.NotEqual(t, oldUser.FullName, updatedUser.FullName)
+	require.Equal(t, newFullName, updatedUser.FullName)
+	require.Equal(t, oldUser.Email, updatedUser.Email)
+	require.Equal(t, oldUser.HashedPassword, updatedUser.HashedPassword)
 
 }
