@@ -37,7 +37,12 @@ proto:
 
 evans:
 	evans -r repl
-.PHONY: migratedown migrateup sqlc test server mock proto evans
+
+redis:
+	docker run --name redis -p 6379:6379 -d redis:7-alpine
+
+.PHONY: migratedown migrateup sqlc test server mock proto evans redis
+
 
 
 
